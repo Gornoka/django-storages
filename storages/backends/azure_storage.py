@@ -187,7 +187,9 @@ class AzureStorage(BaseStorage):
 
         # allow account url override for very custom azure instances/routing
         if "account_url" in options:
-            account_url = options.pop("account_url") # pop can be used due to copy above
+            account_url = options.pop(
+                "account_url"
+            )  # pop can be used due to copy above
 
         return BlobServiceClient(account_url, credential=credential, **options)
 

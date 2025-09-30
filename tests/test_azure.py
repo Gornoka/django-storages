@@ -317,9 +317,7 @@ class AzureStorageTest(TestCase):
             client_mock = mock.MagicMock()
             bsc_mocked.return_value.get_container_client.return_value = client_mock
             self.assertEqual(storage.client, client_mock)
-            bsc_mocked.assert_called_once_with(
-                "https://bar.com", credential="foo_cred"
-            )
+            bsc_mocked.assert_called_once_with("https://bar.com", credential="foo_cred")
         assert storage.client_options == original_client_options
 
     def test_connection_string_can_have_missing(self):

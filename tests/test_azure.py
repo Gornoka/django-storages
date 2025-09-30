@@ -305,6 +305,23 @@ class AzureStorageTest(TestCase):
             self.assertEqual(storage.client, client_mock)
             bsc_mocked.assert_called_once_with("https://bar.com", credential="foo_cred")
 
+    def test_container_client_param_client_options_unchanged(self):
+        storage = azure_storage.AzureStorage()
+        storage.token_credential = "foo_cred"
+        storage.api_version = "2021-04-10"
+        storage.client_options = {"account_url": "https://bar.com"}
+        original_client_options = storage.client_options.copy()
+        with mock.patch(
+            "storages.backends.azure_storage.BlobServiceClient", autospec=True
+        ) as bsc_mocked:
+            client_mock = mock.MagicMock()
+            bsc_mocked.return_value.get_container_client.return_value = client_mock
+            self.assertEqual(storage.client, client_mock)
+            bsc_mocked.assert_called_once_with(
+                "https://bar.com", credential="foo_cred"
+            )
+        assert storage.client_options == original_client_options
+
     def test_connection_string_can_have_missing(self):
         storage = azure_storage.AzureStorage(
             connection_string="AccountKey=abc;Foobar=xyz;"

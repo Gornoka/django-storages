@@ -175,7 +175,7 @@ class AzureStorage(BaseStorage):
         elif self.token_credential:
             credential = self.token_credential
 
-        options = self.client_options
+        options = self.client_options.copy()
         if self.api_version:
             warnings.warn(
                 "The AZURE_API_VERSION/api_version setting is deprecated "
@@ -187,7 +187,7 @@ class AzureStorage(BaseStorage):
 
         # allow account url override for very custom azure instances/routing
         if "account_url" in options:
-            return BlobServiceClient(credential=credential, **options)
+            account_url = options.pop("account_url") # pop can be used due to copy above
 
         return BlobServiceClient(account_url, credential=credential, **options)
 
